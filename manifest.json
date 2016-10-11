@@ -7,16 +7,20 @@
   "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
 
   "permissions": [
-    "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse",
-    "http://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse",
+    "https://banweb.pdx.edu/",
     "tabs"
   ],
 
-  "page_action": {
-    "default_title": "RMP-PSU",
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse",
+        "http://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse"
+      ],
+      "js": ["extension.js"],
+      "run_at": "document_end"
+    }
+  ],
 
   "background": {
     "scripts": ["bootstrap.js"],
