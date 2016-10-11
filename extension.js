@@ -16,16 +16,36 @@ while (totalTeachers >= classRowIndex) {
   teachers.push(teacherName);
 }
 
-let column = document.createElement('th');
-// let columnList = Array.prototype.slice.call(document.querySelectorAll('.datadisplaytable tbody tr:nth-child(3) td'));
-let ratingText = document.createTextNode('lkdjflkjdfj');
+let child;
+let parent;
+let column;
+let ratingText;
+
+
+column = document.createElement('th');
+ratingText = document.createTextNode('COLUMN');
 column.appendChild(ratingText);
 column.classList.add('ddheader');
-// let length = columnList.length;
-let c;
 
-let parent = document.querySelector('.datadisplaytable tbody tr:nth-child(3)');
-console.log(parent);
-c = parent.querySelector('th:nth-child(18)');
-console.log(c);
-parent.insertBefore(column, c);
+parent = document.querySelector('.datadisplaytable tbody tr:nth-child(3)');
+child = parent.querySelector('th:nth-child(19)');
+parent.insertBefore(column, child);
+
+column = document.createElement('td');
+ratingText = document.createTextNode('COLUMN');
+column.appendChild(ratingText);
+column.classList.add('dddefault');
+
+
+parent = document.querySelector('.datadisplaytable tbody tr:nth-child(4)');
+child = parent.querySelector('td:nth-child(18)');
+parent.insertBefore(column, child);
+
+column = document.createElement('td');
+ratingText = document.createTextNode('COLUMN');
+column.appendChild(ratingText);
+column.classList.add('dddefault');
+
+parent = document.querySelector('.datadisplaytable tbody tr:nth-child(5)');
+child = parent.querySelector('td:nth-child(18)');
+parent.insertBefore(column, child);
