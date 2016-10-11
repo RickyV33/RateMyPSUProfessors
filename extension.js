@@ -1,20 +1,19 @@
-let classRowIndex = 4;
-let teacherIndex = 18;
-let teachers = [];
-let teacherName;
-let totalTeachers = document.querySelectorAll('.datadisplaytable tbody tr').length;
+const TABLE_COLUMN_START = 2;
+const TEACHER_INDEX = 18;
+let tableBody = document.querySelector('.datadisplaytable tbody');
 
-while (totalTeachers >= classRowIndex) {
+function getTeacherNames () {
+  let teachers = [];
+  let teacherName;
   let isPrimaryTeacherIndex;
-
-  teacherName = document.querySelector('.datadisplaytable tbody tr:nth-child('
-                                       + classRowIndex++ + ') td:nth-child(' + teacherIndex + ')').innerText;
+  let teacherNames = Arrary.prototype.slice(document.querySelectorAll('.datadisplaytable tbody tr:nth-child(n + 3)'));
   isPrimaryTeacherIndex = teacherName.indexOf('(');
   if (isPrimaryTeacherIndex > -1) {
     teacherName = teacherName.slice(0, isPrimaryTeacherIndex - 1);
   }
   teachers.push(teacherName);
 }
+
 
 let child;
 let parent;
