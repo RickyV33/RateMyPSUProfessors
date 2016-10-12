@@ -21,9 +21,4 @@
       "run_at": "document_end"
     }
   ],
-
-  "background": {
-    "scripts": ["bootstrap.js"],
-    "persistent": false
-  }
 }
