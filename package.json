@@ -4,12 +4,13 @@
   "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
   "main": "extension.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "watchify lib/extension.js --debug -v -o app/js/extension.js -t [ babelify --presets [ es2015 ] ]"
   },
   "author": "Ricardo Valencia",
   "license": "ISC",
   "devDependencies": {
+    "babel-preset-es2015": "^6.16.0",
     "babelify": "^7.3.0",
-    "browserify": "^13.1.0"
+    "watchify": "^3.7.0"
   }
 }
