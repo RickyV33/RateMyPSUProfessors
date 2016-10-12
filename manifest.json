@@ -20,5 +20,5 @@
       "js": ["extension.js"],
       "run_at": "document_end"
     }
-  ],
+  ]
 }
