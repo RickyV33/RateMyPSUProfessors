@@ -1,3 +1,4 @@
+const COLLEGE_NAME = 'Portland State University';
 let tableBody = document.querySelector('.datadisplaytable tbody');
 
 function getTeacherNames () {
