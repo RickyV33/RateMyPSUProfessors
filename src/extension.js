@@ -55,5 +55,3 @@ function addChildren(parent, ...children) {
 }
 updateHeaderColumn();
 updateContentColumns();
-
-
