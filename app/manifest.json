@@ -17,7 +17,7 @@
         "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse",
         "http://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse"
       ],
-      "js": ["js/extension.js"],
+      "js": ["dist/extension.js"],
       "run_at": "document_end"
     }
   ]
