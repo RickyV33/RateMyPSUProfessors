@@ -8,7 +8,7 @@ export default function pagination (url, startAt = 0,
     let results = [];
 
     function getPaginatedData (min, max) {
-      if (containsProfessorListing(results) || min >= max)  {
+      if (containsProfessorListing(results) || min >= max) {
         console.log('HIT');
         resolve(results);
       } else {

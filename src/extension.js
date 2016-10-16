@@ -1,4 +1,8 @@
-const COLLEGE_NAME = 'Portland State University';
+import pagination from './pagination';
+
+const RMP_URL = `https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&
+queryBy=teacherName&schoolName=Portland+State+University&schoolID=&query={name}`;
+
 let tableBody = document.querySelector('.datadisplaytable tbody');
 
 function getTeacherNames () {
@@ -55,3 +59,15 @@ function addChildren(parent, ...children) {
 }
 updateHeaderColumn();
 updateContentColumns();
+let name = 'Karla+Fant';
+let prof = RMP_URL.replace('{name}', name);
+console.log('PING');
+pagination(prof, 0, 2).then(results => {
+  results.forEach((body, index) => {
+    console.log('&&&&&&&&&&&&&&&');
+    console.log(index);
+    console.log(body)
+  })
+}, error => {
+  console.error('oops! There was an error: ' + error);
+});
