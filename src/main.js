@@ -1,2 +1,2 @@
-import 'extension';
-import 'pagination';
+import './extension';
+import './pagination';
