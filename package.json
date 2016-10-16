@@ -14,6 +14,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "browser-request": "^0.3.3",
     "request": "^2.75.0"
   }
 }
