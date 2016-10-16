@@ -13,10 +13,7 @@
 
   "content_scripts": [
     {
-      "matches": [
-        "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse",
-        "http://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse"
-      ],
+      "matches": [ "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse" ],
       "js": ["dist/main.js"],
       "run_at": "document_end"
     }
