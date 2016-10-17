@@ -61,8 +61,7 @@ updateHeaderColumn();
 updateContentColumns();
 let name = 'Karla+Fant';
 let prof = RMP_URL.replace('{name}', name);
-console.log('PING');
-pagination(prof, 0, 2).then(results => {
+pagination(prof).then(results => {
   results.forEach((body, index) => {
     console.log('&&&&&&&&&&&&&&&');
     console.log(index);
