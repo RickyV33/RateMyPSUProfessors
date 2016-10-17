@@ -2,14 +2,16 @@ import request from 'browser-request' ;
 
 
 export default function pagination (url, startAt = 0,
-                                    maxRestults = NUMBER.MAX_SAFE_INTEGER,
+                                    maxRestults = Number.MAX_SAFE_INTEGER,
                                     step = 20) {
+  let parser = new DOMParser();
+  let DOM;
+
   return new Promise((resolve, reject) => {
     let results = [];
 
     function getPaginatedData (min, max) {
       if (containsProfessorListing(results) || min >= max) {
-        console.log('HIT');
         resolve(results);
       } else {
         request({
@@ -21,8 +23,10 @@ export default function pagination (url, startAt = 0,
           if (error) {
             reject(error);
           }
-          results.push(body);
-          getPaginatedData(min + step, max);
+          DOM = parser.parseFromString(body, "text/html");
+          let foo = Array.from(DOM.querySelectorAll('.PROFESSOR'));
+          results.push(...foo);
+          return getPaginatedData(min + step, max);
         });
       }
     }
@@ -31,10 +35,29 @@ export default function pagination (url, startAt = 0,
   });
 }
 
+function parseProfessorInfo(listing) {
+  let info = {};
+  //listing.
+  // Parse the listing HTML and insert it into info listing looks like such:
+  /*
+   <li class="listing PROFESSOR">
+     <a href="/ShowRatings.jsp?tid=132256">
+       <span class="listing-cat">
+         <span class="icon icon-professor"></span>
+         PROFESSOR
+       </span>
+       <span class="listing-name">
+         <span class="main">Fant, Karla </span>
+         <span class="sub">Portland State University, Computer Science</span>
+       </span>
+     </a>
+   </li>
+   */
 
-function containsProfessorListing (data) {
-  let lastEntry = document.createTextNode(data.splice(-1)[0]);
-  let DOM = document.createElement('div');
-  DOM.appendChild(lastEntry);
+}
+
+function containsProfessorListing (HTMLString) {
+  let parser = new DOMParser();
+  let DOM = parser.parseFromString(HTMLString, "text/html");
   return DOM.querySelector('.listing .PROFESSOR');
 }
