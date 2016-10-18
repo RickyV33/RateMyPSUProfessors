@@ -1,53 +1,65 @@
 import request from 'browser-request';
 
-
-export default function pagination (url, startAt = 0,
-                                    maxRestults = Number.MAX_SAFE_INTEGER,
-                                    step = 20) {
-  return new Promise((resolve, reject) => {
+function getProfessorLinks (url) {
+  return new Promise((resolve, request) => {
     let results = [];
     let DOM;
-    let professors;
+    let professorLink;
     let parser = new DOMParser();
 
-    function getPaginatedData (min, max) {
-      request({
-        url: url,
-        qs: { 'offset': min },
-        headers: { 'Content-Type': 'text/html' },
-        method: 'GET'
-      }, (error, response, body) => {
-        if (error) {
-          reject(error);
-        }
-        DOM = parser.parseFromString(body, "text/html");
-        professors = parseProfessorInfo(Array.from(DOM.getElementsByClassName('PROFESSOR')));
-        results.push(...professors);
-        min += step;
-        if (professors.length === 0 || min >= max) {
-          resolve(results);
-        } else {
-          return getPaginatedData(min, max);
-        }
-      });
-    }
-
-    getPaginatedData(startAt, maxRestults)
+    request({
+      url: url,
+      headers: { 'Content-Type': 'text/html' },
+      method: 'GET'
+    }, (error, response, body) => {
+      if (error) {
+        reject(error);
+      }
+      DOM = parser.parseFromString(body, "text/html");
+      professorLink = parseProfessorLink(Array.from(DOM.getElementsByClassName('PROFESSOR')));
+      results.push(...professorLink);
+      resolve(results);
+    });
   });
 }
 
-function parseProfessorInfo (listings) {
-  let info;
-  let anchor;
+function getProfessorInfo (url) {
+  return new Promise((resolve, reject) => {
+    let results = [];
+    let parser = new DOMParser();
+
+    request({
+      url: url,
+      headers: { 'Content-Type': 'text/html' },
+      method: 'GET'
+    }, (error, response, body) => {
+      if (error) {
+        reject(error);
+      }
+      results.push(...parseProfessorInfo(parser.parseFromString(body, "text/html")));
+      resolve(results);
+    });
+  });
+
+}
+
+function parseProfessorLink (listings) {
   if (!listings) {
-    return [];
+    return null;
   }
   return listings.map(listing => {
-    info = {};
-    anchor = listing.firstElementChild;
-    info.link = 'www.ratemyprofessor.com' + anchor.getAttribute('href');
-    [info.last, info.first] = anchor.getElementsByClassName('main')[0]
-      .innerText.split(', ');
-    return info;
+    return 'www.ratemyprofessor.com' +
+           listing.firstElementChild.getAttribute('href');
   });
+}
+
+function parseProfessorInfo (DOM) {
+  let ratingsDiv = Array.from(DOM.getElementsByClassName('breakdown-wrapper'));
+  if (!ratingsDiv) {
+    return null;
+  }
+  let info = {};
+  [ info.first, , info.last ] = Array.from(DOM.querySelector('h1 .profname').childNodes);
+  [info.quality, info.difficulty, ,] = Array.from(DOM.getElementsByClassName('grade'));
+  return info;
 }
