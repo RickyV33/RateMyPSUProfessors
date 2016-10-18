@@ -36,15 +36,17 @@ export default function pagination (url, startAt = 0,
   });
 }
 
-function parseProfessorInfo(listings) {
+function parseProfessorInfo (listings) {
   let info;
   let anchor;
-  if (!listings) return [];
+  if (!listings) {
+    return [];
+  }
   return listings.map(listing => {
     info = {};
     anchor = listing.firstElementChild;
     info.link = 'www.ratemyprofessor.com' + anchor.getAttribute('href');
-    [ info.last, info.first ] = anchor.getElementsByClassName('main')[0]
+    [info.last, info.first] = anchor.getElementsByClassName('main')[0]
       .innerText.split(', ');
     return info;
   });
