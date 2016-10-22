@@ -26,32 +26,35 @@ function updateHeaderColumn () {
   headers.insertBefore(rateMyProfessorColumn, teacherColumn);
 }
 
+function populateRateMyProfessorRow (info, row) {
+  let contentColumn = document.createElement('td');
+  let quality = insertIntoDiv(document.createTextNode(`Quality: ${info.quality}`));
+  let easiness = insertIntoDiv(document.createTextNode(`Easiness: ${info.easiness}`));
+  let link = document.createElement('a');
+  contentColumn.setAttribute('style', 'font-size: .75em');
+  contentColumn.classList.add('dddefault');
+  link.setAttribute('href', info.url);
+  link.setAttribute('target', '_blank');
+  link.appendChild(document.createTextNode('More info...'));
+  link = insertIntoDiv(link);
+  addChildren(contentColumn, quality, easiness, link);
+  row.insertBefore(contentColumn, row.querySelector('td:nth-child(19)'));
+}
+
 function updateContentColumns () {
   let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
 
   contentRows.forEach(row => {
     let [first, last] = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
-    // let RMP_URL = `http://www.ratemyprofessors.com/search.jsp?queryoption=
-    // HEADER&queryBy=teacherName&schoolName=Portland+State+University&schoolID=
-    // &query=${first}+${last}`;
-    let uurl = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${first}+${last}`;
-    getProfessorLink(uurl).then(result => {
-      return getProfessorInfo(result);
+    let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${first}+${last}`;
+    getProfessorLink(url).then(link => {
+      if (!link) {
+        console.log('no link');
+      }
+      return getProfessorInfo(link);
     }).then(info => {
-      // console.log(info);
+      populateRateMyProfessorRow(info, row);
     });
-
-    let contentColumn = document.createElement('td');
-    let quality = insertIntoDiv(document.createTextNode(quality));
-    let easiness = insertIntoDiv(document.createTextNode(easiness));
-    let link = document.createElement('a');
-    contentColumn.setAttribute('style', 'font-size: .75em');
-    contentColumn.classList.add('dddefault');
-    link.setAttribute('href', 'hi');
-    link.appendChild(document.createTextNode('More info...'));
-    link = insertIntoDiv(link);
-    addChildren(contentColumn, quality, easiness, link);
-    row.insertBefore(contentColumn, row.querySelector('td:nth-child(19)'));
   });
 }
 
