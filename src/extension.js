@@ -71,7 +71,7 @@ function addChildren (parent, ...children) {
 }
 
 
-function onInit() {
+function onInit () {
   updateHeaderColumn();
   updateContentColumns();
 
