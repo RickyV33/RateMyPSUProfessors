@@ -4,7 +4,11 @@
   "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
   "main": "extension.js",
   "scripts": {
-    "watch": "watchify src/main.js -d -v -o app/dist/main.js -t [ babelify --presets [ es2015 ] ]"
+    "build": "npm run build:main & npm run build:background",
+    "build:main": "browserify src/main.js -o app/dist/main.js -t [ babelify --presets [ es2015 ] ]",
+    "build:background": "browserify src/background.js -o app/dist/background.js -t [ babelify --presets [ es2015 ] ]",
+    "watch-background": "watchify src/background.js -d -v -o app/dist/background.js -t [ babelify --presets [ es2015 ] ]",
+    "watch-main" : "watchify src/main.js -d -v -o app/dist/main.js -t [ babelify --presets [ es2015 ] ]"
   },
   "author": "Ricardo Valencia",
   "license": "ISC",
