@@ -2,16 +2,20 @@ import request from 'browser-request';
 
 chrome.runtime.onMessage.addListener(function(req, sender, callback) {
   if (req.action === 'getTeacherLinks') {
-    request(req.options, (urlerror, response, body) => {
-      console.log('this gets the links');
+    request(req.options, (error, response, body) => {
+      if (error) {
+        callback({error: error, response: reponse, body: body});
+      }
+      callback(body);
     });
-    return true;
   } else if (req.action === 'getTeacherInfo') {
-    request(req.options, (urlerror, response, body) => {
-      console.log('this gets the info');
+    request(req.options, (error, response, body) => {
+      if (error) {
+        callback({error: error, response: reponse, body: body});
+      }
+      callback(body);
     });
-    return true;
-
   }
+  return true;
 });
 
