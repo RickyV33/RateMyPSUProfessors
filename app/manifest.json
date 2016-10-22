@@ -8,7 +8,7 @@
 
   "permissions": [
     "https://banweb.pdx.edu/*",
-    "http://www.ratemyprofessor.com/*",
+    "http://www.ratemyprofessors.com/*",
     "tabs"
   ],
 
