@@ -7,7 +7,8 @@
   "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
 
   "permissions": [
-    "https://banweb.pdx.edu/",
+    "https://banweb.pdx.edu/*",
+    "http://www.ratemyprofessor.com/*",
     "tabs"
   ],
 
@@ -17,5 +18,9 @@
       "js": ["dist/main.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["dist/background.js"],
+    "persistent": false
+  }
 }
