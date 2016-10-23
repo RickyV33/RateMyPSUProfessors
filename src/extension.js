@@ -1,6 +1,6 @@
 'use strict';
 
-import { searchProfessors, getProfessorInfo } from './pagination';
+import { searchProfessors, getProfessorInfo } from './rateMyProfessor';
 import { uniq } from 'lodash';
 
 document.addEventListener('DOMContentLoaded', onInit(), false);
@@ -9,11 +9,11 @@ function onInit () {
   let table = document.querySelector('.datadisplaytable');
   if (table.getAttribute('summary').includes('sections')) {
     let tableBody = table.querySelector('tbody');
-    updateHeader(tableBody);
     let professorNames = getProfessorNames(tableBody);
     searchProfessors(professorNames).then(urls => {
       return getProfessorInfo(urls, professorNames);
     }).then(profInfo => {
+      updateHeader(tableBody);
       updateRows(tableBody, profInfo);
     }).catch(error => {
       console.error(error);

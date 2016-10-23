@@ -15,7 +15,7 @@ export function searchProfessors (names) {
         professor[names[i].last] = first;
         // eslint-disable-next-line
         chrome.runtime.sendMessage({
-          action: 'searchProfessors',
+          action: 'xhr',
           options: {
             url: url,
             method: 'GET'
@@ -53,7 +53,7 @@ export function getProfessorInfo (urls, names) {
         if (professor.info) {
             // eslint-disable-next-line
           chrome.runtime.sendMessage({
-            action: 'getProfessorInfo',
+            action: 'xhr',
             options: {
               url: professor.info.url,
               method: 'POST'

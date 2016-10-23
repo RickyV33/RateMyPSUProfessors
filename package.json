@@ -1,10 +1,13 @@
 {
   "name": "RateMyPSUProfessors",
-  "version": "1.0.1",
-  "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
-  "main": "extension.js",
+  "version": "1.0",
+  "description": "An extension that grabs a professors ratings from RateMyProfessors.com and displays them as you search for classes.",
   "author": "Ricardo Valencia",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RickyV33/RateMyPSUProfessors.git"
+  },
   "scripts": {
     "build": "npm run build:main & npm run build:background",
     "build:extension": "browserify src/extension.js -o app/dist/extension.js -t [ babelify --presets [ es2015 ] ]",
