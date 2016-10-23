@@ -13,7 +13,7 @@ export function searchProfessors (names) {
         let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${names[i].first}+${names[i].last}`;
         first[names[i].first] = {info: null};
         professor[names[i].last] = first;
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line
         chrome.runtime.sendMessage({
           action: 'searchProfessors',
           options: {
@@ -24,7 +24,7 @@ export function searchProfessors (names) {
           if (response.error) {
             reject(response.error);
           }
-          // eslint-disable-next-line no-use-before-define
+          // eslint-disable-next-line
           let parser = new DOMParser();
           let DOM = parser.parseFromString(response.body, 'text/html');
           let urlPath = DOM.querySelector('a[href*="ShowRating"]');
@@ -51,6 +51,7 @@ export function getProfessorInfo (urls, names) {
       } else {
         let professor = professors[names[i].last][names[i].first];
         if (professor.info) {
+            // eslint-disable-next-line
           chrome.runtime.sendMessage({
             action: 'getProfessorInfo',
             options: {
@@ -61,7 +62,7 @@ export function getProfessorInfo (urls, names) {
             if (response.error) {
               reject(response.error);
             }
-            // eslint-disable-next-line no-use-before-define
+            // eslint-disable-next-line
             let parser = new DOMParser();
             let DOM = parser.parseFromString(response.body, 'text/html');
             let ratingsDiv = Array.from(DOM.getElementsByClassName('breakdown-wrapper'));
