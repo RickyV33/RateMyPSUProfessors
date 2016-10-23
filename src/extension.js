@@ -60,7 +60,7 @@ function updateRows (tableBody, info) {
   let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
 
   contentRows.forEach(row => {
-      populateRateMyProfessorCell(row, info);
+    populateRateMyProfessorCell(row, info);
   });
 }
 

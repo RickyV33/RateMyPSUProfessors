@@ -1,5 +1,6 @@
 import request from 'browser-request';
 
+// eslint-disable-next-line no-use-before-define
 chrome.runtime.onMessage.addListener(function (req, sender, callback) {
   if (req.action === 'searchProfessors' || req.action === 'getProfessorInfo') {
     request(req.options, (error, response, body) => {
