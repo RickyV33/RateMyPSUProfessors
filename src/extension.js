@@ -13,8 +13,8 @@ function onInit () {
     let professorNames = getProfessorNames(tableBody);
     searchProfessors(professorNames).then(urls => {
       return getProfessorInfo(urls, professorNames);
-    }).then(info => {
-      updateRows(tableBody, info);
+    }).then(profInfo => {
+      updateRows(tableBody, profInfo);
     }).catch(error => {
       console.error(error);
     });
@@ -27,23 +27,6 @@ function getProfessorNames (tableBody) {
     return element.innerText;
   })).map(name => {
     return parseFirstAndLast(name);
-  });
-}
-
-function updateHeader (tableBody) {
-  let rateMyProfessorColumn = document.createElement('th');
-  let tableHeaders = tableBody.querySelector('tr:nth-child(3)');
-  let teacherColumn = tableHeaders.querySelector('th:nth-child(20)');
-  rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
-  rateMyProfessorColumn.classList.add('ddheader');
-  tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
-}
-
-function updateRows (tableBody, info) {
-  let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
-
-  contentRows.forEach(row => {
-      populateRateMyProfessorCell(row, info);
   });
 }
 
@@ -62,6 +45,23 @@ function parseFirstAndLast (name) {
     first: first,
     last: last
   };
+}
+
+function updateHeader (tableBody) {
+  let rateMyProfessorColumn = document.createElement('th');
+  let tableHeaders = tableBody.querySelector('tr:nth-child(3)');
+  let teacherColumn = tableHeaders.querySelector('th:nth-child(20)');
+  rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
+  rateMyProfessorColumn.classList.add('ddheader');
+  tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
+}
+
+function updateRows (tableBody, info) {
+  let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
+
+  contentRows.forEach(row => {
+      populateRateMyProfessorCell(row, info);
+  });
 }
 
 function populateRateMyProfessorCell (row, teacher) {
