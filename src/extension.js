@@ -1,4 +1,6 @@
-import { getProfessorLink, getProfessorInfo } from './pagination';
+'use strict';
+
+import { searchProfessors, getProfessorInfo } from './pagination';
 import { uniq } from 'lodash';
 
 document.addEventListener('DOMContentLoaded', onInit(), false);
@@ -7,13 +9,19 @@ function onInit () {
   let table = document.querySelector('.datadisplaytable');
   if (table.getAttribute('summary').includes('sections')) {
     let tableBody = table.querySelector('tbody');
-    console.log(getTeacherNames(tableBody));
     updateHeader(tableBody);
-    updateRows(tableBody);
+    let professorNames = getProfessorNames(tableBody);
+    searchProfessors(professorNames).then(urls => {
+      return getProfessorInfo(urls, professorNames);
+    }).then(info => {
+      updateRows(tableBody, info);
+    }).catch(error => {
+      console.error(error);
+    });
   }
 }
 
-function getTeacherNames (tableBody) {
+function getProfessorNames (tableBody) {
   let teacherNameList = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4) td:nth-child(18)'));
   return uniq(teacherNameList.map(element => {
     return element.innerText;
@@ -31,17 +39,11 @@ function updateHeader (tableBody) {
   tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
 }
 
-function updateRows (tableBody) {
+function updateRows (tableBody, info) {
   let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
 
   contentRows.forEach(row => {
-    let name = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
-    let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${name.first}+${name.last}`;
-    getProfessorLink(url).then(link => {
-      return getProfessorInfo(link);
-    }).then(info => {
-      populateRateMyProfessorCell(info, row);
-    });
+      populateRateMyProfessorCell(row, info);
   });
 }
 
@@ -62,7 +64,9 @@ function parseFirstAndLast (name) {
   };
 }
 
-function populateRateMyProfessorCell (info, row) {
+function populateRateMyProfessorCell (row, teacher) {
+  let professorName = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
+  let info = teacher[professorName.last][professorName.first].info;
   let contentCell = document.createElement('td');
   contentCell.setAttribute('style', 'font-size: .75em');
   contentCell.classList.add('dddefault');
