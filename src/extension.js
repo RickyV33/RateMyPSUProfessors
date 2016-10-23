@@ -70,9 +70,12 @@ function addChildren (parent, ...children) {
 
 
 function onInit () {
-  let tableBody = document.querySelector('.datadisplaytable tbody');
-  updateHeaderColumns(tableBody);
-  updateContentColumns(tableBody);
+  let table = document.querySelector('.datadisplaytable');
+  if (table.getAttribute('summary').includes('sections')){
+    let tableBody = table.querySelector('tbody');
+    updateHeaderColumns(tableBody);
+    updateContentColumns(tableBody);
+  }
 
 }
 
