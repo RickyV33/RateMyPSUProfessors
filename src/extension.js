@@ -1,17 +1,28 @@
 import { getProfessorLink, getProfessorInfo } from './pagination';
+import { uniq } from 'lodash';
 
 document.addEventListener('DOMContentLoaded', onInit(), false);
 
 function onInit () {
   let table = document.querySelector('.datadisplaytable');
-  if (table.getAttribute('summary').includes('sections')){
+  if (table.getAttribute('summary').includes('sections')) {
     let tableBody = table.querySelector('tbody');
-    updateHeaderColumns(tableBody);
-    updateContentColumns(tableBody);
+    console.log(getTeacherNames(tableBody));
+    updateHeader(tableBody);
+    updateRows(tableBody);
   }
 }
 
-function updateHeaderColumns (tableBody) {
+function getTeacherNames (tableBody) {
+  let teacherNameList = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4) td:nth-child(18)'));
+  return uniq(teacherNameList.map(element => {
+    return element.innerText;
+  })).map(name => {
+    return parseFirstAndLast(name);
+  });
+}
+
+function updateHeader (tableBody) {
   let rateMyProfessorColumn = document.createElement('th');
   let tableHeaders = tableBody.querySelector('tr:nth-child(3)');
   let teacherColumn = tableHeaders.querySelector('th:nth-child(20)');
@@ -20,12 +31,12 @@ function updateHeaderColumns (tableBody) {
   tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
 }
 
-function updateContentColumns (tableBody) {
+function updateRows (tableBody) {
   let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
 
   contentRows.forEach(row => {
-    let [first, last] = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
-    let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${first}+${last}`;
+    let name = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
+    let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${name.first}+${name.last}`;
     getProfessorLink(url).then(link => {
       return getProfessorInfo(link);
     }).then(info => {
@@ -43,7 +54,12 @@ function parseFirstAndLast (name) {
   }
   // Returns only the first and last name - excluding the middle (if it
   // exists)
-  return [name.shift(), name.pop()]
+  let first = name.shift();
+  let last = name.pop();
+  return {
+    first: first,
+    last: last
+  };
 }
 
 function populateRateMyProfessorCell (info, row) {
