@@ -1,5 +1,4 @@
 import { getProfessorLink, getProfessorInfo } from './pagination';
-import { uniq, isEmpty } from 'lodash';
 
 function parseFirstAndLast (name) {
   name = name.split(' ');
@@ -22,12 +21,13 @@ function updateHeaderColumns (tableBody) {
   tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
 }
 
-function populateRateMyProfessorRow (info, row) {
+function populateRateMyProfessorCell (info, row) {
   let contentCell = document.createElement('td');
   contentCell.setAttribute('style', 'font-size: .75em');
   contentCell.classList.add('dddefault');
-  if (isEmpty(info)) {
-
+  if (!info) {
+    let noInfo = insertIntoDiv(document.createTextNode('N/A'));
+    contentCell = addChildren(contentCell, noInfo);
   } else {
     let quality = insertIntoDiv(document.createTextNode(`Quality: ${info.quality}`));
     let easiness = insertIntoDiv(document.createTextNode(`Easiness: ${info.easiness}`));
@@ -37,8 +37,8 @@ function populateRateMyProfessorRow (info, row) {
     link.appendChild(document.createTextNode('More info...'));
     link = insertIntoDiv(link);
     contentCell = addChildren(contentCell, quality, easiness, link);
-    row.insertBefore(contentCell, row.querySelector('td:nth-child(19)'));
   }
+  row.insertBefore(contentCell, row.querySelector('td:nth-child(19)'));
 }
 
 function updateContentColumns (tableBody) {
@@ -48,12 +48,9 @@ function updateContentColumns (tableBody) {
     let [first, last] = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
     let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${first}+${last}`;
     getProfessorLink(url).then(link => {
-      if (!link) {
-        console.log('no link');
-      }
       return getProfessorInfo(link);
     }).then(info => {
-      populateRateMyProfessorRow(info, row);
+      populateRateMyProfessorCell(info, row);
     });
   });
 }
