@@ -1,5 +1,7 @@
 import { getProfessorLink, getProfessorInfo } from './pagination';
 
+document.addEventListener('DOMContentLoaded', onInit(), false);
+
 function parseFirstAndLast (name) {
   name = name.split(' ');
   // Remove the (P) tag from the name
@@ -79,8 +81,4 @@ function onInit () {
 
 }
 
-// fires when script is first loaded
-// can't do onInit directly here, because the DOM hasn't been loaded yet
-// we just set an event listener for document.DOMContentLoaded
-document.addEventListener('DOMContentLoaded', onInit(), false);
 
