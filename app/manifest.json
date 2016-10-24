@@ -4,7 +4,7 @@
   "version": "1.0",
 
   "author": "Ricardo Valencia",
-  "description": "Simplifies your course registration at Portland State University by providing additional information on your professors. This chrome extension retrieves the professor's ratings from RateMyProfessors.com and displays it along side the course they teach in banweb.",
+  "description": "A chrome extension that simplifies your course registration at Portland State University by providing additional information on your professors. The extension retrieves the professor's ratings from RateMyProfessors.com and displays it along side the course they teach in banweb.",
 
   "permissions": [
     "https://banweb.pdx.edu/*",
