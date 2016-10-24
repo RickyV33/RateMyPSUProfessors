@@ -1,16 +1,19 @@
 {
   "name": "RateMyPSUProfessors",
-  "version": "1.0.1",
-  "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
-  "main": "extension.js",
+  "version": "1.0.0",
+  "description": "An extension that grabs a professors ratings from RateMyProfessors.com and displays them as you search for classes.",
   "author": "Ricardo Valencia",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RickyV33/RateMyPSUProfessors.git"
+  },
   "scripts": {
-    "build": "npm run build:main & npm run build:background",
-    "build:extension": "browserify src/extension.js -o app/dist/extension.js -t [ babelify --presets [ es2015 ] ]",
-    "build:background": "browserify src/background.js -o app/dist/background.js -t [ babelify --presets [ es2015 ] ]",
-    "watch-background": "watchify src/background.js -d -v -o app/dist/background.js -t [ babelify --presets [ es2015 ] ]",
-    "watch-extension": "watchify src/extension.js -d -v -o app/dist/extension.js -t [ babelify --presets [ es2015 ] ]",
+    "clean": "npm run clean:dist",
+    "clean:dist": "rm -f app/dist/*.js",
+    "build": "npm run lint & npm run build:all",
+    "build:all": "browserify src/*.js -t [ babelify --presets [ es2015 ] ] | uglifyjs --compress --mangle -o app/dist/main.min.js",
+    "watch": "watchify src/*.js -d -v -o app/dist/main.min.js -t [ babelify --presets [ es2015 ] ]",
     "lint": "eslint src/"
   },
   "dependencies": {
@@ -21,10 +24,12 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
     "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
     "eslint": "^3.8.1",
     "eslint-config-semistandard": "^7.0.0",
     "eslint-config-standard": "^6.2.0",
     "semistandard": "^9.1.0",
+    "uglify-js": "^2.7.4",
     "watchify": "^3.7.0"
   },
   "peerDependencies": {
