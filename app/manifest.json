@@ -18,12 +18,12 @@
   "content_scripts": [
     {
       "matches": [ "https://banweb.pdx.edu/pls/oprd/bwskfcls.P_GetCrse" ],
-      "js": ["dist/extension.min.js"],
+      "js": ["dist/main.min.js"],
       "run_at": "document_end"
     }
   ],
   "background": {
-    "scripts": ["dist/background.min.js"],
+    "scripts": ["dist/main.min.js"],
     "persistent": false
   }
 }

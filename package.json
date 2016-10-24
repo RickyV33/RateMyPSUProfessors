@@ -11,12 +11,9 @@
   "scripts": {
     "clean": "npm run clean:dist",
     "clean:dist": "rm -f app/dist/*.js",
-    "uglify:extension": "",
-    "build": "npm run build:extension & npm run build:background",
-    "build:extension": "browserify src/extension.js -t [ babelify --presets [ es2015 ] ] | uglifyjs --compress --mangle -o app/dist/extension.min.js",
-    "build:background": "browserify src/background.js -t [ babelify --presets [ es2015 ] ] | uglifyjs --compress --mangle -o app/dist/background.min.js",
-    "watch:background": "watchify src/background.js -d -v -o app/dist/background.js -t [ babelify --presets [ es2015 ] ]",
-    "watch:extension": "watchify src/extension.js -d -v -o app/dist/extension.js -t [ babelify --presets [ es2015 ] ]",
+    "build": "npm run lint & npm run build:all",
+    "build:all": "browserify src/*.js -t [ babelify --presets [ es2015 ] ] | uglifyjs --compress --mangle -o app/dist/main.min.js",
+    "watch": "watchify src/*.js -d -v -o app/dist/main.min.js -t [ babelify --presets [ es2015 ] ]",
     "lint": "eslint src/"
   },
   "dependencies": {
