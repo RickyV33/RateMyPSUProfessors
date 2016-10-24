@@ -4,7 +4,7 @@
   "version": "1.0",
 
   "author": "Ricardo Valencia",
-  "description": "An extension that grabs a professors ratings from RateMyProfessor.com and displays them as you search for classes.",
+  "description": "Simplifies your course registration by adding additional information on your professors. This chrome extension retrieves the their ratings from RateMyProfessors.com and displays it along side the course they teach in banweb.",
 
   "permissions": [
     "https://banweb.pdx.edu/*",
