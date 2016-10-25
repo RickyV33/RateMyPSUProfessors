@@ -7,18 +7,35 @@ document.addEventListener('DOMContentLoaded', onInit(), false);
 
 function onInit () {
   let table = document.querySelector('.datadisplaytable');
-  if (table.getAttribute('summary').includes('sections')) {
+  if (table && table.getAttribute('summary').includes('sections')) {
     let tableBody = table.querySelector('tbody');
     let professorNames = getProfessorNames(tableBody);
+    // Initialize cells
+    updateHeader(tableBody);
+    addLoadingPlaceholders(tableBody);
     searchProfessors(professorNames).then(urls => {
       return getProfessorInfo(urls, professorNames);
     }).then(profInfo => {
-      updateHeader(tableBody);
       updateRows(tableBody, profInfo);
     }).catch(error => {
       console.error(error);
     });
   }
+}
+
+function addLoadingPlaceholders (tableBody) {
+  let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
+
+  contentRows.forEach(row => {
+    let gif = document.createElement('img');
+    // eslint-disable-next-line
+    gif.src = chrome.extension.getURL('images/gears.gif');
+    gif.style.display = 'block';
+    gif.style.margin = 'auto';
+    let gifDiv = insertIntoDiv(gif);
+    gifDiv.classList.add('gifDiv');
+    row.insertBefore(gifDiv, row.querySelector('td:nth-child(19)'));
+  });
 }
 
 function getProfessorNames (tableBody) {
@@ -83,12 +100,15 @@ function populateRateMyProfessorCell (row, teacher) {
     link = insertIntoDiv(link);
     contentCell = addChildren(contentCell, quality, easiness, link);
   }
-  row.insertBefore(contentCell, row.querySelector('td:nth-child(19)'));
+  let gifDiv = row.querySelector('.gifDiv');
+  gifDiv.parentNode.replaceChild(contentCell, gifDiv);
 }
 
-function insertIntoDiv (element) {
+function insertIntoDiv (...elements) {
   let div = document.createElement('div');
-  div.appendChild(element);
+  elements.forEach(element => {
+    div.appendChild(element);
+  });
   return div;
 }
 
