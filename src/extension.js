@@ -9,14 +9,13 @@ function onInit () {
   let dataTable = document.querySelector('.datadisplaytable');
   if (dataTable && dataTable.getAttribute('summary').includes('sections')) {
     let tableBody = dataTable.querySelector('tbody');
-    let professorNames = getProfessorNames(tableBody);
     addClassNames(tableBody);
+    let instructorNames = getInstructorNames(tableBody);
     // Initialize cells
     updateHeader(tableBody);
-    return true;
     addLoadingPlaceholders(tableBody);
-    searchProfessors(professorNames).then(urls => {
-      return getProfessorInfo(urls, professorNames);
+    searchProfessors(instructorNames).then(urls => {
+      return getProfessorInfo(urls, instructorNames);
     }).then(profInfo => {
       updateRows(tableBody, profInfo);
     }).catch(error => {
@@ -25,10 +24,18 @@ function onInit () {
   }
 }
 
+function getInstructorNames (tableBody) {
+  return uniq(Array.from(tableBody.querySelectorAll('.instructor td:nth-child(18)'))
+                    .map(element => {
+                      return element.innerText;
+                    })).map(name => {
+                      return parseFirstAndLast(name);
+                    });
+}
+
 function addClassNames (tableBody) {
   let sectionNameInfoRow, sectionNameRow, headerRow;
-  let sectionName = Array.from(tableBody.querySelectorAll('.ddtitle'));
-  sectionName.forEach(name => {
+  Array.from(tableBody.querySelectorAll('.ddtitle')).forEach(name => {
     sectionNameInfoRow = sectionNameRow = headerRow = name.parentNode;
     do {
       sectionNameInfoRow = sectionNameInfoRow.previousSibling;
@@ -42,22 +49,25 @@ function addClassNames (tableBody) {
     sectionNameRow.classList.add('skip');
     headerRow.classList.add('header');
   });
+  Array.from(tableBody.querySelectorAll('tr:not(.skip):not(.header)'))
+        .forEach(instructorRow => {
+          instructorRow.querySelector('td:nth-child(19)').classList.add('date');
+          instructorRow.classList.add('instructor');
+        });
 }
 
 function updateHeader (tableBody) {
   Array.from(tableBody.getElementsByClassName('header')).forEach(header => {
-    let rateMyProfessorColumn = document.createElement('th');
-    let teacherColumn = header.querySelector('th:nth-child(20)');
-    rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
-    rateMyProfessorColumn.classList.add('ddheader');
-    header.insertBefore(rateMyProfessorColumn, teacherColumn);
+    let rateMyProfessorCell = document.createElement('th');
+    let dateCell = header.querySelector('th:nth-child(20)');
+    rateMyProfessorCell.appendChild(document.createTextNode('Rate My Professor'));
+    rateMyProfessorCell.classList.add('ddheader');
+    header.insertBefore(rateMyProfessorCell, dateCell);
   });
 }
 
 function addLoadingPlaceholders (tableBody) {
-  let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
-
-  contentRows.forEach(row => {
+  Array.from(tableBody.querySelectorAll('.instructor')).forEach(row => {
     let gif = document.createElement('img');
     // eslint-disable-next-line
     gif.src = chrome.extension.getURL('images/gears.gif');
@@ -65,16 +75,7 @@ function addLoadingPlaceholders (tableBody) {
     gif.style.margin = 'auto';
     let gifDiv = insertIntoDiv(gif);
     gifDiv.classList.add('gifDiv');
-    row.insertBefore(gifDiv, row.querySelector('td:nth-child(19)'));
-  });
-}
-
-function getProfessorNames (tableBody) {
-  let teacherNameList = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4) td:nth-child(18)'));
-  return uniq(teacherNameList.map(element => {
-    return element.innerText;
-  })).map(name => {
-    return parseFirstAndLast(name);
+    row.insertBefore(gifDiv, row.querySelector('.date'));
   });
 }
 
@@ -85,7 +86,7 @@ function parseFirstAndLast (name) {
   if (isPrimaryTeacherIndex > -1) {
     name.pop();
   }
-  // Returns only the first and last name - excluding the middle (if it
+  // Returns only the first and last name - excluding the middle name (if it
   // exists)
   let first = name.shift();
   let last = name.pop();
@@ -95,16 +96,14 @@ function parseFirstAndLast (name) {
   };
 }
 function updateRows (tableBody, info) {
-  let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
-
-  contentRows.forEach(row => {
+  Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)')).forEach(row => {
     populateRateMyProfessorCell(row, info);
   });
 }
 
-function populateRateMyProfessorCell (row, teacher) {
+function populateRateMyProfessorCell (row, instructor) {
   let professorName = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
-  let info = teacher[professorName.last][professorName.first].info;
+  let info = instructor[professorName.last][professorName.first].info;
   let contentCell = document.createElement('td');
   contentCell.setAttribute('style', 'font-size: .75em');
   contentCell.classList.add('dddefault');
@@ -134,6 +133,7 @@ function insertIntoDiv (...elements) {
 }
 
 function addChildren (parent, ...children) {
+  parent.cloneNode(true);
   children.forEach(child => {
     parent.appendChild(child);
   });
