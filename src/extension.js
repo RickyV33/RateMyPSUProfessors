@@ -6,13 +6,15 @@ import { uniq } from 'lodash';
 document.addEventListener('DOMContentLoaded', onInit(), false);
 
 function onInit () {
-  let table = document.querySelector('.datadisplaytable');
-  if (table && table.getAttribute('summary').includes('sections')) {
-    let tableBody = table.querySelector('tbody');
+  let dataTable = document.querySelector('.datadisplaytable');
+  if (dataTable && dataTable.getAttribute('summary').includes('sections')) {
+    let tableBody = dataTable.querySelector('tbody');
     let professorNames = getProfessorNames(tableBody);
+    addClassNames(tableBody);
     // Initialize cells
     updateHeader(tableBody);
     addLoadingPlaceholders(tableBody);
+    return true;
     searchProfessors(professorNames).then(urls => {
       return getProfessorInfo(urls, professorNames);
     }).then(profInfo => {
@@ -21,6 +23,25 @@ function onInit () {
       console.error(error);
     });
   }
+}
+
+function addClassNames (tableBody) {
+  let sectionNameInfoRow, sectionNameRow, headerRow;
+  let sectionName = Array.from(tableBody.querySelectorAll('.ddtitle'));
+  sectionName.forEach(name => {
+    sectionNameInfoRow = sectionNameRow = headerRow = name.parentNode;
+    do {
+      sectionNameInfoRow = sectionNameInfoRow.previousSibling;
+      // eslint-disable-next-line
+    } while (sectionNameInfoRow.nodeType === Node.TEXT_NODE);
+    do {
+      headerRow = headerRow.nextSibling;
+      // eslint-disable-next-line
+    } while (headerRow.nodeType === Node.TEXT_NODE);
+    sectionNameInfoRow.classList.add('skip');
+    sectionNameRow.classList.add('skip');
+    headerRow.classList.add('header');
+  });
 }
 
 function addLoadingPlaceholders (tableBody) {
@@ -66,11 +87,15 @@ function parseFirstAndLast (name) {
 
 function updateHeader (tableBody) {
   let rateMyProfessorColumn = document.createElement('th');
-  let tableHeaders = tableBody.querySelector('tr:nth-child(3)');
-  let teacherColumn = tableHeaders.querySelector('th:nth-child(20)');
-  rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
-  rateMyProfessorColumn.classList.add('ddheader');
-  tableHeaders.insertBefore(rateMyProfessorColumn, teacherColumn);
+  let tableHeaders = Array.from(tableBody.getElementsByClassName('header'));
+  console.log(tableHeaders);
+
+  tableHeaders.forEach(header => {
+    let teacherColumn = header.querySelector('th:nth-child(20)');
+    rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
+    rateMyProfessorColumn.classList.add('ddheader');
+    header.insertBefore(rateMyProfessorColumn, teacherColumn);
+  });
 }
 
 function updateRows (tableBody, info) {
