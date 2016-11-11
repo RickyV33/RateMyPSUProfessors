@@ -13,8 +13,8 @@ function onInit () {
     addClassNames(tableBody);
     // Initialize cells
     updateHeader(tableBody);
-    addLoadingPlaceholders(tableBody);
     return true;
+    addLoadingPlaceholders(tableBody);
     searchProfessors(professorNames).then(urls => {
       return getProfessorInfo(urls, professorNames);
     }).then(profInfo => {
@@ -41,6 +41,16 @@ function addClassNames (tableBody) {
     sectionNameInfoRow.classList.add('skip');
     sectionNameRow.classList.add('skip');
     headerRow.classList.add('header');
+  });
+}
+
+function updateHeader (tableBody) {
+  Array.from(tableBody.getElementsByClassName('header')).forEach(header => {
+    let rateMyProfessorColumn = document.createElement('th');
+    let teacherColumn = header.querySelector('th:nth-child(20)');
+    rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
+    rateMyProfessorColumn.classList.add('ddheader');
+    header.insertBefore(rateMyProfessorColumn, teacherColumn);
   });
 }
 
@@ -84,20 +94,6 @@ function parseFirstAndLast (name) {
     last: last
   };
 }
-
-function updateHeader (tableBody) {
-  let rateMyProfessorColumn = document.createElement('th');
-  let tableHeaders = Array.from(tableBody.getElementsByClassName('header'));
-  console.log(tableHeaders);
-
-  tableHeaders.forEach(header => {
-    let teacherColumn = header.querySelector('th:nth-child(20)');
-    rateMyProfessorColumn.appendChild(document.createTextNode('Rate My Professor'));
-    rateMyProfessorColumn.classList.add('ddheader');
-    header.insertBefore(rateMyProfessorColumn, teacherColumn);
-  });
-}
-
 function updateRows (tableBody, info) {
   let contentRows = Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)'));
 
