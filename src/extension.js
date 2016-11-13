@@ -1,6 +1,6 @@
 'use strict';
 
-import { searchProfessors, getProfessorInfo } from './rateMyProfessor';
+import { searchProfessors, getInstructorsInfo } from './rateMyProfessor';
 import { uniq } from 'lodash';
 
 document.addEventListener('DOMContentLoaded', onInit(), false);
@@ -15,7 +15,7 @@ function onInit () {
     updateHeader(tableBody);
     addLoadingPlaceholders(tableBody);
     searchProfessors(instructorNames).then(urls => {
-      return getProfessorInfo(urls, instructorNames);
+      return getInstructorsInfo(urls, instructorNames);
     }).then(profInfo => {
       updateRows(tableBody, profInfo);
     }).catch(error => {
@@ -82,30 +82,29 @@ function addLoadingPlaceholders (tableBody) {
 function parseFirstAndLast (name) {
   name = name.split(' ');
   // Remove the (P) tag from the name
-  let isPrimaryTeacherIndex = name.indexOf('(P)');
-  if (isPrimaryTeacherIndex > -1) {
+  if (name.indexOf('(P)') > -1) {
     name.pop();
   }
   // Returns only the first and last name - excluding the middle name (if it
   // exists)
   let first = name.shift();
-  let last = name.pop();
+  let last = first === 'TBA' ? 'TBA' : name.pop();
   return {
     first: first,
     last: last
   };
 }
 function updateRows (tableBody, info) {
-  Array.from(tableBody.querySelectorAll('tr:nth-child(n+4)')).forEach(row => {
-    populateRateMyProfessorCell(row, info);
+  Array.from(tableBody.getElementsByClassName('instructor')).forEach(instructorRow => {
+    populateRateMyProfessorCell(instructorRow, info);
   });
 }
 
 function populateRateMyProfessorCell (row, instructor) {
-  let professorName = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
-  let info = instructor[professorName.last][professorName.first].info;
+  let instructorName = parseFirstAndLast(row.querySelector('td:nth-child(18)').innerText);
+  let info = instructor[instructorName.last][instructorName.first].info;
   let contentCell = document.createElement('td');
-  contentCell.setAttribute('style', 'font-size: .75em');
+  contentCell.setAttribute('style', 'font-size: .72em');
   contentCell.classList.add('dddefault');
   if (!info) {
     let noInfo = insertIntoDiv(document.createTextNode('N/A'));

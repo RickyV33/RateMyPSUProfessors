@@ -2,17 +2,18 @@
 
 export function searchProfessors (names) {
   return new Promise((resolve, reject) => {
-    let professors = {};
+    let instructors = {};
 
-    function getURL (names, i) {
-      if (!names[i]) {
-        resolve(professors);
+    function getURL (names) {
+      if (names.length === 0) {
+        resolve(instructors);
       } else {
+        let name = names.pop();
         let first = {};
-        let professor = {};
-        let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${names[i].first}+${names[i].last}`;
-        first[names[i].first] = {info: null};
-        professor[names[i].last] = first;
+        let instructor = {};
+        let url = `http://www.ratemyprofessors.com/search.jsp?query=portland+state+university+${name.first}+${name.last}`;
+        first[name.first] = {info: null};
+        instructor[name.last] = first;
         // eslint-disable-next-line
         chrome.runtime.sendMessage({
           action: 'xhr',
@@ -29,34 +30,35 @@ export function searchProfessors (names) {
           let DOM = parser.parseFromString(response.body, 'text/html');
           let urlPath = DOM.querySelector('a[href*="ShowRating"]');
           if (urlPath) {
-            professor[names[i].last][names[i].first].info = {url: `http://www.ratemyprofessors.com${urlPath.getAttribute('href')}`};
+            instructor[name.last][name.first].info = {url: `http://www.ratemyprofessors.com${urlPath.getAttribute('href')}`};
           }
-          professors = Object.assign({}, professors, professor);
-          getURL(names, ++i);
+          instructors = Object.assign({}, instructors, instructor);
+          getURL(names);
         });
       }
     }
 
-    getURL(names, 0);
+    getURL(Array.from(names));
   });
 }
 
-export function getProfessorInfo (urls, names) {
+export function getInstructorsInfo (urls, names) {
   return new Promise((resolve, reject) => {
-    let professors = Object.assign({}, urls);
+    let instructors = Object.assign({}, urls);
 
-    function getInfo (names, i) {
-      if (!names[i]) {
-        resolve(professors);
+    function getInfo (names) {
+      if (names.length === 0) {
+        resolve(instructors);
       } else {
-        let professor = professors[names[i].last][names[i].first];
-        if (professor.info) {
+        let name = names.pop();
+        let instructor = instructors[name.last][name.first];
+        if (instructor.info) {
             // eslint-disable-next-line
           chrome.runtime.sendMessage({
             action: 'xhr',
             options: {
-              url: professor.info.url,
-              method: 'POST'
+              url: instructor.info.url,
+              method: 'GET'
             }
           }, response => {
             if (response.error) {
@@ -65,26 +67,22 @@ export function getProfessorInfo (urls, names) {
             // eslint-disable-next-line
             let parser = new DOMParser();
             let DOM = parser.parseFromString(response.body, 'text/html');
-            let ratingsDiv = Array.from(DOM.getElementsByClassName('breakdown-wrapper'));
-            if (ratingsDiv) {
+            let profGrades = DOM.querySelectorAll('.breakdown-wrapper .grade');
+            if (profGrades) {
               let profInfo = {};
-              let profName = DOM.querySelector('.profname');
-              let profGrades = DOM.querySelectorAll('.breakdown-wrapper .grade');
-              profInfo.first = profName.querySelector('.pfname').innerText.trim();
-              profInfo.last = profName.querySelector('.plname').innerText.trim();
               profInfo.quality = profGrades[0].innerText.trim();
               profInfo.easiness = profGrades[2].innerText.trim();
-              profInfo.url = professor.info.url;
-              professor.info = Object.assign({}, professor.info, profInfo);
-              Object.assign(professors, urls);
-              getInfo(names, ++i);
+              profInfo.url = instructor.info.url;
+              instructor.info = Object.assign({}, instructor.info, profInfo);
+              getInfo(names);
             }
           });
         } else {
-          getInfo(names, ++i);
+          getInfo(names);
         }
       }
     }
-    getInfo(names, 0);
+    getInfo(Array.from(names));
   });
 }
+
