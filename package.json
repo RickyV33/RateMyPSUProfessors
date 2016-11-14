@@ -1,6 +1,6 @@
 {
   "name": "RateMyPSUProfessors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An extension that grabs a professors ratings from RateMyProfessors.com and displays them as you search for classes.",
   "author": "Ricardo Valencia",
   "license": "MIT",
