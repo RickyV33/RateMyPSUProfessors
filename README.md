@@ -21,7 +21,7 @@ To run and debug
 $ npm run debug
 ```
 
-To run all tests (this will also run the linter) - *PENDING
+To run all tests (this will also run the linter) - **PENDING**
 ```
 $ npm test
 ```
@@ -31,7 +31,7 @@ To run the linter
 $ npm run lint
 ```
 
-To run the watcher for automatical rebuilding
+To run the watcher for automatic rebuilding
 ```
 $ npm run watch
 ```
