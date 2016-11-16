@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Rate My PSU Professors",
-  "version": "1.1",
+  "version": "1.2",
 
   "author": "Ricardo Valencia",
   "description": "An extension for Portland State University that utilizes RateMyProfessors.com to display ratings alongside the professors in banweb.",
