@@ -80,7 +80,9 @@ function addLoadingPlaceholders (tableBody) {
 }
 
 function parseFirstAndLast (name) {
-  name = name.split(' ');
+  // If there are multiple instructor names in a cell separeted by a comman,
+  // only take the first one.
+  name = name.split(',')[0].split(' ');
   // Remove the (P) tag from the name
   if (name.indexOf('(P)') > -1) {
     name.pop();

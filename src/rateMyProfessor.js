@@ -67,8 +67,10 @@ export function getInstructorsInfo (urls, names) {
             // eslint-disable-next-line
             let parser = new DOMParser();
             let DOM = parser.parseFromString(response.body, 'text/html');
-            let profGrades = DOM.querySelectorAll('.breakdown-wrapper .grade');
-            if (profGrades) {
+            // Need to check the grades section before getting the professors grades
+            let gradesSectionExists = DOM.querySelector('.breakdown-wrapper');
+            if (gradesSectionExists) {
+              let profGrades = DOM.querySelectorAll('.breakdown-wrapper .grade');
               let profInfo = {};
               profInfo.quality = profGrades[0].innerText.trim();
               profInfo.easiness = profGrades[2].innerText.trim();
