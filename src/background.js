@@ -1,7 +1,7 @@
 import request from 'browser-request';
 
 // eslint-disable-next-line
-chrome.runtime.onMessage.addListener(function (req, sender, callback) {
+chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if (req.action === 'xhr') {
     request(req.options, (error, response, body) => {
       if (error) {
@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(function (req, sender, callback) {
           response: response
         });
       }
-      callback({body: body});
+      callback({body: body, response: response, name: req.name});
     });
     return true;
   }

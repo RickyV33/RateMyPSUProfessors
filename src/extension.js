@@ -25,12 +25,17 @@ function onInit () {
 }
 
 function getInstructorNames (tableBody) {
-  return uniq(Array.from(tableBody.querySelectorAll('.instructor td:nth-child(18)'))
-                    .map(element => {
-                      return element.innerText;
-                    })).map(name => {
-                      return parseFirstAndLast(name);
-                    });
+  // Removes duplicate teachers
+  return uniq(Array.from(
+    tableBody.querySelectorAll('.instructor td:nth-child(18)')).map(element => {
+      return element.innerText;
+    }).map(name => {
+      return parseFirstAndLast(name);
+    }).map(name => {
+      return JSON.stringify(name);
+    })).map(name => {
+      return JSON.parse(name);
+    });
 }
 
 function addClassNames (tableBody) {
@@ -80,8 +85,6 @@ function addLoadingPlaceholders (tableBody) {
 }
 
 function parseFirstAndLast (name) {
-  // If there are multiple instructor names in a cell separeted by a comman,
-  // only take the first one.
   name = name.split(',')[0].split(' ');
   // Remove the (P) tag from the name
   if (name.indexOf('(P)') > -1) {
