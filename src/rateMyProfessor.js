@@ -56,7 +56,10 @@ export function getInstructorsInfo (urls, names) {
         return name;
       }
     });
-    let length = instructorNames.length;
+    let length;
+    if ((length = instructorNames.length) === 0) {
+      resolve(instructors);
+    }
     instructorNames.forEach(name => {
       let instructor = instructors[name.last][name.first];
       // eslint-disable-next-line
