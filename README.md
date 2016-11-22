@@ -21,11 +21,6 @@ To run and debug
 $ npm run debug
 ```
 
-To run all tests (this will also run the linter) - **PENDING**
-```
-$ npm test
-```
-
 To run the linter
 ```
 $ npm run lint
@@ -47,11 +42,6 @@ $ npm run clean
 
 * [Node Package Manager](https://www.npmjs.com)
 * JavaScript (ES6)
-
-## Testing - PENDING
-
-The [Mocha](https://mochajs.org) framework was used with [Chai](http://chaijs.com), an assertion library, to conduct all
-tests on Rate My PSU Professors.
 
 ## Copyright and license
 
