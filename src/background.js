@@ -12,6 +12,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       }
       callback({body: body, response: response, name: req.name});
     });
+    // Lets the callback finish before continuing 
     return true;
   }
 });
